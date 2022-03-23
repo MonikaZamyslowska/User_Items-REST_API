@@ -50,7 +50,7 @@ public class UserHandler {
           return;
         }
 
-        String authToken = authService.createAuthorizationToken(context, res);
+        String authToken = authService.createAuthorizationToken(res);
 
         context.response().setStatusCode(200).end(Json.encode(new JsonObject().put("token", authToken)));
       })

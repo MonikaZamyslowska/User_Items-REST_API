@@ -23,7 +23,7 @@ public class ItemHandler {
   }
 
   public void createItem(RoutingContext context) {
-    final String token = authService.getAuthorizedUserToken(context);
+    final String token = authService.getAuthorizedUserToken();
 
     if (token == null) {
       context.response().setStatusCode(404).end();
@@ -39,7 +39,7 @@ public class ItemHandler {
   }
 
   public void getItemsByUser(RoutingContext context) {
-    final String token = authService.getAuthorizedUserToken(context);
+    final String token = authService.getAuthorizedUserToken();
 
     if (token == null) {
       context.response().setStatusCode(404).end();
