@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class MainVerticle extends AbstractVerticle {
-  private Map<UUID, User> users = new HashMap<>();
-  private Map<UUID, Item> items = new HashMap<>();
+  private final Map<UUID, User> users = new HashMap<>();
+  private final Map<UUID, Item> items = new HashMap<>();
   private String id;
 
   @Override
@@ -158,7 +158,6 @@ public class MainVerticle extends AbstractVerticle {
       routingContext.response().setStatusCode(400).end();
     } else {
       UUID idAsUuid = UUID.fromString(id);
-      deleteItemsByUser();
       users.remove(idAsUuid);
     }
     routingContext.response().setStatusCode(204).end();
@@ -201,24 +200,24 @@ public class MainVerticle extends AbstractVerticle {
     return routingContext.request().getParam("id");
   }
 
-  private void deleteItemsByUser() {
-    items.entrySet().stream()
-      .map(entry -> entry.getValue())
-      .filter(item -> item.getOwner().getId().equals(id))
-      .forEach(item -> items.remove(item.getId()));
-  }
+//  private void deleteItemsByUser() {
+//    items.entrySet().stream()
+//      .map(entry -> entry.getValue())
+//      .filter(item -> item.getOwner().getId().equals(id))
+//      .forEach(item -> items.remove(item.getId()));
+//  }
 
   private void createSomeData() {
     User user = new User(UUID.randomUUID(),"test", "password");
     User user1 = new User(UUID.randomUUID(),"test1", "password");
 
-    Item item = new Item(UUID.randomUUID(), user, "test");
-    Item item1 = new Item(UUID.randomUUID(), user1, "test1");
+//    Item item = new Item(UUID.randomUUID(),  "test");
+//    Item item1 = new Item(UUID.randomUUID(),  "test1");
 
     users.put(user.getId(), user);
     users.put(user1.getId(), user1);
-
-    items.put(item.getId(), item);
-    items.put(item1.getId(), item1);
+//
+//    items.put(item.getId(), item);
+//    items.put(item1.getId(), item1);
   }
 }
