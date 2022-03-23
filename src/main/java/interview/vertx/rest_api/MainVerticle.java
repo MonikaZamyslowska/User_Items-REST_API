@@ -21,6 +21,11 @@ import io.vertx.ext.web.Router;
 
 
 public class MainVerticle extends AbstractVerticle {
+  private static final String AUTH_ALGORITHM = "HS256";
+  private static final String AUTH_BUFFER = "keyboard cat";
+  private static final String DB_NAME = "demo_db";
+  private static final String SERVER_STARTED_INFO = "HTTP server started on port: ";
+  private static final int PORT_NUMBER = 8080;
 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
@@ -42,9 +47,9 @@ public class MainVerticle extends AbstractVerticle {
 
     server
       .requestHandler(router)
-      .listen(8080)
+      .listen(PORT_NUMBER)
       .onSuccess(http -> {
-        System.out.println("HTTP server started on port:" + http.actualPort());
+        System.out.println(SERVER_STARTED_INFO + http.actualPort());
         startPromise.complete();
       })
       .onFailure(http -> startPromise.fail(http.getCause()));
@@ -53,13 +58,13 @@ public class MainVerticle extends AbstractVerticle {
   private JWTAuth createJwtAuth() {
     return JWTAuth.create(vertx, new JWTAuthOptions()
       .addPubSecKey(new PubSecKeyOptions()
-        .setAlgorithm("HS256")
-        .setBuffer("keyboard cat")));
+        .setAlgorithm(AUTH_ALGORITHM)
+        .setBuffer(AUTH_BUFFER)));
   }
 
   private MongoClient createMongoClient(Vertx vertx) {
     final JsonObject config = new JsonObject()
-      .put("db_name", "demo_db");
+      .put("db_name", DB_NAME);
 
     return MongoClient.createShared(vertx, config);
   }

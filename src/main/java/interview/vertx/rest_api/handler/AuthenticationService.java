@@ -10,6 +10,7 @@ import io.vertx.ext.web.RoutingContext;
 public class AuthenticationService {
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String BEARER_TOKEN = "Bearer ";
+  private static final String AUTH_ALGORITHM = "HS256";
   private final JWTAuth provider;
 
   public AuthenticationService(JWTAuth provider) {
@@ -27,7 +28,7 @@ public class AuthenticationService {
 
   public String createAuthorizationToken(JsonObject user) {
     return provider.generateToken(new JsonObject().put("sub", user.getString("id")), new JWTOptions()
-      .setAlgorithm("HS256")
+      .setAlgorithm(AUTH_ALGORITHM)
       .setExpiresInMinutes(15));
   }
 

@@ -22,16 +22,15 @@ public class UserHandler {
 
     userRepository.findUserByLogin(user.getLogin())
       .compose(res -> {
-        if (res == null) {
-          context.response()
-            .putHeader("content-type", "application/json; charset=utf-8")
-            .end(Json.encodePrettily(user));
-          return userRepository.save(user);
-        } else {
-          context.response().setStatusCode(404).end();
+        if (res != null) {
           return null;
         }
-      });
+        return userRepository.save(user);
+      })
+      .onSuccess(res -> context.response()
+        .putHeader("content-type", "application/json; charset=utf-8")
+        .end(Json.encodePrettily(user)))
+      .onFailure(context::fail);
   }
 
   public void login(RoutingContext context) {
@@ -40,13 +39,7 @@ public class UserHandler {
 
     userRepository.findUserByLogin(user.getLogin())
       .onSuccess(res -> {
-        if (res == null) {
-          context.response().setStatusCode(404).end();
-          return;
-        }
-
-        if (!passwordEncoder.matches(user.getPassword(), res.getString("password"))) {
-          context.response().setStatusCode(404).end();
+        if (res == null || !passwordEncoder.matches(user.getPassword(), res.getString("password"))) {
           return;
         }
 

@@ -6,6 +6,9 @@ import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 
 public class ApiRouter {
+  private static final String REGISTER_ENDPOINT = "/register";
+  private static final String LOGIN_ENDPOINT = "/login";
+  private static final String ITEMS_ENDPOINT = "/items";
   private final Vertx vertx;
   private final ItemHandler itemHandler;
   private final UserHandler userHandler;
@@ -20,12 +23,12 @@ public class ApiRouter {
     Router router = Router.router(vertx);
 
     //User
-    router.post("/register").handler(userHandler::register);
-    router.post("/login").handler(userHandler::login);
+    router.post(REGISTER_ENDPOINT).handler(userHandler::register);
+    router.post(LOGIN_ENDPOINT).handler(userHandler::login);
 
     //Item
-    router.post("/items").handler(itemHandler::createItem);
-    router.get("/items").handler(itemHandler::getItemsByUser);
+    router.post(ITEMS_ENDPOINT).handler(itemHandler::createItem);
+    router.get(ITEMS_ENDPOINT).handler(itemHandler::getItemsByUser);
 
     return router;
   }

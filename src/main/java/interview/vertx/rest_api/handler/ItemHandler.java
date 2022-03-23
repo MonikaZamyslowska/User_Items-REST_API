@@ -28,9 +28,9 @@ public class ItemHandler {
     authService.getAuthenticateUser(context)
       .compose(user -> {
         Item item = Json.decodeValue(context.getBodyAsString(), Item.class);
-        context.response().setStatusCode(200).end();
         return itemRepository.save(item, user.get("sub"));
       })
+      .onSuccess(res -> context.response().setStatusCode(201).end())
       .onFailure(context::fail);
   }
 
@@ -39,7 +39,8 @@ public class ItemHandler {
       .compose(user -> itemRepository.findItemsByUser(user.get("sub")))
       .onSuccess(res -> {
         List<Item> items = res.stream()
-          .map(jsonObj -> new Item(UUID.fromString(jsonObj.getString("id")),
+          .map(jsonObj -> new Item(
+            UUID.fromString(jsonObj.getString("id")),
             UUID.fromString(jsonObj.getString("owner")),
             jsonObj.getString("name")))
           .collect(Collectors.toList());
@@ -48,6 +49,4 @@ public class ItemHandler {
       })
       .onFailure(context::fail);
   }
-
-
 }
