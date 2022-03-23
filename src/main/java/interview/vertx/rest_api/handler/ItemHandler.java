@@ -1,10 +1,8 @@
 package interview.vertx.rest_api.handler;
 
 import interview.vertx.rest_api.model.Item;
-import interview.vertx.rest_api.service.ItemService;
+import interview.vertx.rest_api.repository.ItemRepository;
 import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.List;
@@ -12,41 +10,33 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ItemHandler {
-  private final ItemService itemService;
+  private final ItemRepository itemRepository;
   private final AuthenticationService authService;
-  private final JWTAuth provider;
 
-  public ItemHandler(ItemService itemService, JWTAuth provider, AuthenticationService authService) {
-    this.itemService = itemService;
-    this.provider = provider;
+  public ItemHandler(ItemRepository itemRepository, AuthenticationService authService) {
+    this.itemRepository = itemRepository;
     this.authService = authService;
   }
 
   public void createItem(RoutingContext context) {
-    final String token = authService.getAuthorizedUserToken();
+    final String token = authService.getAuthorizedUserToken(context);
 
     if (token == null) {
       context.response().setStatusCode(404).end();
     }
 
-    provider.authenticate(new JsonObject().put("token", token))
+    authService.getAuthenticateUser(context)
       .compose(user -> {
         Item item = Json.decodeValue(context.getBodyAsString(), Item.class);
         context.response().setStatusCode(200).end();
-        return itemService.save(item, user.get("sub"));
+        return itemRepository.save(item, user.get("sub"));
       })
       .onFailure(context::fail);
   }
 
   public void getItemsByUser(RoutingContext context) {
-    final String token = authService.getAuthorizedUserToken();
-
-    if (token == null) {
-      context.response().setStatusCode(404).end();
-    }
-
-    provider.authenticate(new JsonObject().put("token", token))
-      .compose(user -> itemService.findItemsByUser(user.get("sub")))
+    authService.getAuthenticateUser(context)
+      .compose(user -> itemRepository.findItemsByUser(user.get("sub")))
       .onSuccess(res -> {
         List<Item> items = res.stream()
           .map(jsonObj -> new Item(UUID.fromString(jsonObj.getString("id")),
