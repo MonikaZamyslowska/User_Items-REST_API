@@ -11,6 +11,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Item {
   private UUID id;
-  private User owner;
+  private UUID owner;
   private String name;
 }

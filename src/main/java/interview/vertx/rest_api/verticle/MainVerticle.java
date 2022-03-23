@@ -1,4 +1,4 @@
-package interview.vertx.rest_api;
+package interview.vertx.rest_api.verticle;
 
 import interview.vertx.rest_api.model.Item;
 import interview.vertx.rest_api.model.User;
