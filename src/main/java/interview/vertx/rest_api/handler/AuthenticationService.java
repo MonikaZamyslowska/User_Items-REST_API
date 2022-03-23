@@ -19,7 +19,7 @@ public class AuthenticationService {
 
   public String getAuthorizedUserToken(RoutingContext context) {
     String header = context.request().getHeader(AUTHORIZATION_HEADER);
-    if (header != null || header.startsWith(BEARER_TOKEN)) {
+    if (header != null) {
       return header.substring(BEARER_TOKEN.length());
     } else {
       return null;
