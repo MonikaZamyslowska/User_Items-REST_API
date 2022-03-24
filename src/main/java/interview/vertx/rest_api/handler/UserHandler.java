@@ -27,9 +27,7 @@ public class UserHandler {
         }
         return userRepository.save(user);
       })
-      .onSuccess(res -> context.response()
-        .putHeader("content-type", "application/json; charset=utf-8")
-        .end(Json.encodePrettily(user)))
+      .onSuccess(res -> context.response().setStatusCode(201))
       .onFailure(context::fail);
   }
 
