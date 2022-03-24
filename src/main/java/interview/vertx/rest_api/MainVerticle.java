@@ -43,7 +43,7 @@ public class MainVerticle extends AbstractVerticle {
     ItemHandler itemHandler = new ItemHandler(itemRepository, authService);
 
     ApiRouter apiRouter = new ApiRouter(vertx, itemHandler, userHandler);
-    Router router = apiRouter.geRouter();
+    Router router = apiRouter.getRouter();
 
     server
       .requestHandler(router)

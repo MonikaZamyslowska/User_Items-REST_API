@@ -47,4 +47,15 @@ public class UserHandler {
       })
       .onFailure(context::fail);
   }
+
+  public User getValidatedJsonObject(RoutingContext context) {
+    User user = new User();
+    try {
+      user = Json.decodeValue(context.getBodyAsString(), User.class);
+    } catch (Exception e) {
+      System.out.println("JsonBodyError: " + e.getStackTrace());
+    }
+
+    return user;
+  }
 }
