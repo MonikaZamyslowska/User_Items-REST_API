@@ -27,7 +27,7 @@ public class AuthenticationService {
   }
 
   public String createAuthorizationToken(JsonObject user) {
-    return provider.generateToken(new JsonObject().put("sub", user.getString("id")), new JWTOptions()
+    return provider.generateToken(new JsonObject().put("sub", user.getString("_id")), new JWTOptions()
       .setAlgorithm(AUTH_ALGORITHM)
       .setExpiresInMinutes(15));
   }

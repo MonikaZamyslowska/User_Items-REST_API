@@ -25,7 +25,7 @@ public class UserService implements UserRepository {
 
     return mongoClient.save(COLLECTION_NAME,
       new JsonObject()
-        .put("id", UUID.randomUUID().toString())
+        .put("_id", UUID.randomUUID().toString())
         .put("login", user.getLogin())
         .put("password", passwordEncoder.encode(user.getPassword())));
   }

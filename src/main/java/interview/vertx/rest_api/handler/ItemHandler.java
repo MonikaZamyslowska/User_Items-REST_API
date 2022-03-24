@@ -40,7 +40,7 @@ public class ItemHandler {
       .onSuccess(res -> {
         List<Item> items = res.stream()
           .map(jsonObj -> new Item(
-            UUID.fromString(jsonObj.getString("id")),
+            UUID.fromString(jsonObj.getString("_id")),
             UUID.fromString(jsonObj.getString("owner")),
             jsonObj.getString("name")))
           .collect(Collectors.toList());

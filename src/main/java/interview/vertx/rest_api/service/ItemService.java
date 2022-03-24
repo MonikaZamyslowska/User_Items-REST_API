@@ -21,7 +21,7 @@ public class ItemService implements ItemRepository {
   public Future<String> save(Item item, String userId) {
     return mongoClient.save(COLLECTION_NAME,
       new JsonObject()
-        .put("id", UUID.randomUUID().toString())
+        .put("_id", UUID.randomUUID().toString())
         .put("owner", userId)
         .put("name", item.getName())
     );

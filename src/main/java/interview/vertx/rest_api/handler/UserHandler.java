@@ -18,7 +18,7 @@ public class UserHandler {
   }
 
   public void register(RoutingContext context) {
-    User user = Json.decodeValue(context.getBodyAsString(), User.class);
+    User user = getValidatedJsonObject(context);
 
     userRepository.findUserByLogin(user.getLogin())
       .compose(res -> {
@@ -53,7 +53,7 @@ public class UserHandler {
     try {
       user = Json.decodeValue(context.getBodyAsString(), User.class);
     } catch (Exception e) {
-      System.out.println("JsonBodyError: " + e.getStackTrace());
+      System.out.println("JsonBodyError: " + e.getMessage());
     }
 
     return user;
