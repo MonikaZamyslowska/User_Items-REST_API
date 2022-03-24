@@ -68,4 +68,9 @@ public class MainVerticle extends AbstractVerticle {
 
     return MongoClient.createShared(vertx, config);
   }
+
+  public static void main(String[] args) {
+    Vertx vertx = Vertx.vertx();
+    vertx.deployVerticle(new MainVerticle());
+  }
 }
